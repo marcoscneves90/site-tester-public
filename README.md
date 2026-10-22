@@ -4,7 +4,7 @@
 > Análise técnica profunda, crawler de múltiplas páginas, detecção de tecnologias e score consolidado.
 > Rodando 100% no homelab, sem dependência de APIs pagas.
 
-[![Private](https://img.shields.io/badge/visibilidade-privado-lightgrey)]()
+[![Public](https://img.shields.io/badge/visibilidade-público-brightgreen)]()
 [![Node](https://img.shields.io/badge/node-20.x-339933?logo=node.js&logoColor=white)]()
 [![TypeScript](https://img.shields.io/badge/typescript-5.x-3178C6?logo=typescript&logoColor=white)]()
 [![React](https://img.shields.io/badge/react-18.x-61DAFB?logo=react&logoColor=white)]()

@@ -1,0 +1,148 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body, #root {
+  min-height: 100vh;
+}
+
+body {
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: #0f172a;
+  /* Fundo gradiente suave estilo iOS — lavanda/rosa/azul */
+  background:
+    radial-gradient(at 20% 0%,  rgba(196, 181, 253, 0.35) 0px, transparent 50%),
+    radial-gradient(at 80% 0%,  rgba(251, 207, 232, 0.35) 0px, transparent 50%),
+    radial-gradient(at 50% 100%, rgba(191, 219, 254, 0.30) 0px, transparent 60%),
+    linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+  background-attachment: fixed;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ============================================================
+   Glassmorphism — cards translúcidos estilo iOS
+   ============================================================ */
+.glass-card {
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 1.75rem;
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.9),
+    0 1px 3px rgba(15, 23, 42, 0.04),
+    0 12px 32px -8px rgba(99, 102, 241, 0.12);
+}
+
+.glass-card-strong {
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(28px) saturate(180%);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  border-radius: 1.75rem;
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 1),
+    0 1px 3px rgba(15, 23, 42, 0.04),
+    0 16px 40px -8px rgba(99, 102, 241, 0.16);
+}
+
+.glass-header {
+  background: rgba(255, 255, 255, 0.60);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+/* Inputs estilo iOS */
+.ios-input {
+  @apply w-full px-4 py-2.5 rounded-xl text-sm
+         bg-white/70 border border-white/80
+         placeholder:text-slate-400
+         focus:outline-none focus:ring-2 focus:ring-violet-400/60 focus:bg-white
+         transition;
+}
+
+/* Botão primário estilo iOS */
+.ios-btn-primary {
+  @apply inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold
+         text-white
+         disabled:opacity-50 disabled:cursor-not-allowed
+         transition active:scale-[0.98];
+  background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.30);
+}
+
+.ios-btn-primary:hover:not(:disabled) {
+  box-shadow: 0 6px 16px rgba(99, 102, 241, 0.40);
+}
+
+.ios-btn-secondary {
+  @apply inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-medium
+         text-slate-700 bg-white/70 border border-white/80
+         hover:bg-white
+         transition active:scale-[0.98];
+}
+
+/* ============================================================
+   Terminal (mantido, com leve ajuste iOS)
+   ============================================================ */
+.terminal {
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  background-color: #0d1117;
+  color: #c9d1d9;
+  border-radius: 1.25rem;
+  border: 1px solid #30363d;
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.20);
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  letter-spacing: 0.01em;
+  overflow: hidden;
+}
+
+.terminal-header {
+  background-color: #161b22;
+  border-bottom: 1px solid #30363d;
+  padding: 0.625rem 0.875rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.terminal-dot {
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.terminal-body {
+  padding: 1rem 1.125rem;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.t-prompt  { color: #7ee787; }
+.t-path    { color: #79c0ff; }
+.t-flag    { color: #ff7b72; }
+.t-time    { color: #6e7681; }
+.t-info    { color: #79c0ff; }
+.t-success { color: #7ee787; }
+.t-warn    { color: #d29922; }
+.t-error   { color: #f85149; }
+.t-metric  { color: #d2a8ff; }
+.t-label   { color: #8b949e; }
+.t-value   { color: #c9d1d9; }
+
+.cursor {
+  display: inline-block;
+  width: 0.5rem;
+  height: 1rem;
+  background-color: #7ee787;
+  vertical-align: text-bottom;
+  animation: blink 1s steps(2, start) infinite;
+}
+
+@keyframes blink {
+  to { visibility: hidden; }
+}

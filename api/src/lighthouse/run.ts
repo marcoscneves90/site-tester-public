@@ -4,15 +4,8 @@ import path from "node:path";
 
 const require = createRequire(import.meta.url);
 
-/**
- * Resolve o caminho do binário `lighthouse` instalado em node_modules/.bin
- * Isso evita depender do PATH do processo — que não inclui .bin quando
- * rodamos via `node dist/...` direto.
- */
 function resolveLighthouseBin(): string {
-  // require.resolve("lighthouse/cli/index.js") -> /app/node_modules/lighthouse/cli/index.js
   const cliEntry = require.resolve("lighthouse/cli/index.js");
-  // Sobe dois níveis pra chegar em /app/node_modules/.bin/lighthouse
   const binPath = path.join(path.dirname(cliEntry), "..", "..", ".bin", "lighthouse");
   return binPath;
 }
@@ -24,11 +17,13 @@ export interface LighthouseResult {
 
 export interface LighthouseOptions {
   url: string;
+  device?: "desktop" | "mobile";
   timeoutMs?: number;
 }
 
 export function runLighthouse(opts: LighthouseOptions): Promise<LighthouseResult> {
   const timeoutMs = opts.timeoutMs ?? 90_000;
+  const device = opts.device ?? "desktop";
 
   return new Promise((resolve, reject) => {
     const startedAt = Date.now();
@@ -38,11 +33,16 @@ export function runLighthouse(opts: LighthouseOptions): Promise<LighthouseResult
       opts.url,
       "--output=json",
       "--output-path=stdout",
-      "--chrome-flags=--headless=new --no-sandbox --disable-dev-shm-usage --disk-cache-dir=/dev/null --disable-application-cache --disable-offline-load-stale-cache",
+      "--chrome-flags=--headless=new --no-sandbox --disable-dev-shm-usage",
       "--only-categories=performance,accessibility,best-practices,seo",
       "--throttling-method=provided",
       "--quiet",
     ];
+
+    // Preset desktop (mobile é o padrão do Lighthouse)
+    if (device === "desktop") {
+      args.push("--preset=desktop");
+    }
 
     const child = spawn(bin, args, {
       env: { ...process.env, CHROME_PATH: process.env.CHROME_PATH ?? "/usr/bin/chromium" },

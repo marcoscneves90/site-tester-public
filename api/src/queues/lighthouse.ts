@@ -12,6 +12,7 @@ export interface LighthouseJobData {
   runId: number;
   siteId: number;
   url: string;
+  device: "desktop" | "mobile";
 }
 
 export const lighthouseQueue = new Queue<LighthouseJobData>(QUEUE_NAME, {
@@ -23,9 +24,6 @@ export const lighthouseQueue = new Queue<LighthouseJobData>(QUEUE_NAME, {
   },
 });
 
-/**
- * Tenta achar a URL do favicon no raw_report do Lighthouse.
- */
 function extractFaviconUrl(raw: any): string | null {
   try {
     const audit = raw?.audits?.favicon;
@@ -40,10 +38,6 @@ function extractFaviconUrl(raw: any): string | null {
   return null;
 }
 
-/**
- * Busca o HTML do site com timeout. Se falhar, retorna string vazia.
- * Usado pra extrair <title> e <meta name="description"> corretamente.
- */
 async function fetchHtml(url: string): Promise<string> {
   try {
     const controller = new AbortController();
@@ -70,9 +64,9 @@ export function startLighthouseWorker() {
   const worker = new Worker<LighthouseJobData>(
     QUEUE_NAME,
     async (job: Job<LighthouseJobData>) => {
-      const { runId, url, siteId } = job.data;
+      const { runId, url, siteId, device } = job.data;
 
-      console.log(`[worker] processando run=${runId} url=${url}`);
+      console.log(`[worker] processando run=${runId} url=${url} device=${device}`);
 
       await query(
         `UPDATE runs SET status = 'running', started_at = now() WHERE id = $1`,
@@ -80,14 +74,11 @@ export function startLighthouseWorker() {
       );
 
       try {
-        const { raw, durationMs } = await runLighthouse({ url, timeoutMs });
+        const { raw, durationMs } = await runLighthouse({ url, device, timeoutMs });
         const m = parseLighthouse(raw);
 
-        // Busca o HTML pra extrair title/description corretos
-        // (o Lighthouse 12 não expõe mais esses valores no raw_report)
         const html = await fetchHtml(url);
 
-        // Calcula o score SEO antes de salvar
         const seoResult = calculateSeoScore(
           raw,
           {
@@ -133,7 +124,6 @@ export function startLighthouseWorker() {
           ]
         );
 
-        // Extrai favicon
         const faviconUrl = extractFaviconUrl(raw);
         if (faviconUrl) {
           await query(
@@ -144,16 +134,17 @@ export function startLighthouseWorker() {
         }
 
         console.log(
-        `[worker] run=${runId} concluída em ${durationMs}ms | SEO score: ${seoResult.overall}`
-      );
-
-      // Dispara o crawl de múltiplas páginas (assíncrono)
-      crawlSite(runId, url).catch((err) => {
-        console.error(
-          `[worker] crawl falhou pra run=${runId}:`,
-          (err as Error).message
+          `[worker] run=${runId} (${device}) concluída em ${durationMs}ms | SEO score: ${seoResult.overall}`
         );
-      });
+        // Só dispara crawler no modo desktop (evita duplicar crawls mobile+desktop)
+        if (device === "desktop") {
+            crawlSite(runId, url).catch((err) => {
+            console.error(
+            `[worker] crawl falhou pra run=${runId}:`,
+            (err as Error).message
+           );
+         });
+        }
       } catch (err) {
         const message = (err as Error).message;
         console.error(`[worker] run=${runId} falhou:`, message);

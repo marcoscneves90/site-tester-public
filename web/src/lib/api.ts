@@ -45,10 +45,14 @@ export const api = {
     }),
   deleteSite: (id: number) =>
     request<void>(`/sites/${id}`, { method: "DELETE" }),
-  runSite: (id: number) =>
-    request<{ runId: number; status: string }>(`/sites/${id}/run`, {
-      method: "POST",
-    }),
+  runSite: (id: number, device: "desktop" | "mobile" | "ambos" = "desktop") =>
+    request<{ runIds: number[]; devices: string[]; status: string }>(
+      `/sites/${id}/run`,
+      {
+        method: "POST",
+        body: JSON.stringify({ device }),
+      }
+    ),
   listRuns: (siteId: number) => request<Run[]>(`/sites/${siteId}/runs`),
   getRun: (id: number) => request<RunWithRaw>(`/runs/${id}?raw=1`),
   getRunResources: (id: number) => request<RunResources>(`/runs/${id}/resources`),

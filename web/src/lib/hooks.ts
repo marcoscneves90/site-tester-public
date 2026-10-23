@@ -71,8 +71,14 @@ export function useDeleteSite() {
 export function useRunSite() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: (id: number) => api.runSite(id),
-    onSuccess: (_data, id) => {
+    mutationFn: ({
+      id,
+      device,
+    }: {
+      id: number;
+      device?: "desktop" | "mobile" | "ambos";
+    }) => api.runSite(id, device ?? "desktop"),
+    onSuccess: (_data, { id }) => {
       qc.invalidateQueries({ queryKey: ["runs", id] });
       qc.invalidateQueries({ queryKey: ["overview"] });
     },

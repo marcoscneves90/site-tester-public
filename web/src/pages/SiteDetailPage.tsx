@@ -10,6 +10,8 @@ import {
   XCircle,
   Loader2,
   Trash2,
+  Smartphone,
+  Monitor,
 } from "lucide-react";
 import { useSites, useSiteRuns, useRunSite, useRun, useDeleteRun } from "../lib/hooks";
 import { ScoreBadge } from "../components/ScoreBadge";
@@ -17,6 +19,7 @@ import { SiteAvatar } from "../components/SiteAvatar";
 import { RunTerminal } from "../components/RunTerminal";
 import { RunDetailsPanel } from "../components/RunDetailsPanel";
 import { GitCompare } from "lucide-react";
+import { RunSiteButton } from "../components/RunSiteButton";
 import type { Run } from "../lib/types";
 
 function fmtDate(iso: string | null): string {
@@ -82,6 +85,17 @@ function RunRow({
         <td className="py-3 px-3 text-sm text-slate-700 whitespace-nowrap">
           {fmtDate(run.started_at)}
         </td>
+        <td className="py-3 px-3 text-center">
+          {run.device === "mobile" ? (
+            <span title="Mobile" className="inline-flex items-center justify-center w-6 h-6 rounded-md bg-violet-100 text-violet-700">
+              <Smartphone className="w-3.5 h-3.5" />
+            </span>
+          ) : (
+            <span title="Desktop" className="inline-flex items-center justify-center w-6 h-6 rounded-md bg-cyan-100 text-cyan-700">
+              <Monitor className="w-3.5 h-3.5" />
+            </span>
+          )}
+        </td>
         <td className="py-3 px-3">
           <div className="flex items-center gap-1.5">
             <StatusIcon status={run.status} />
@@ -126,7 +140,7 @@ function RunRow({
 
       {isExpanded && (
         <tr>
-          <td colSpan={10} className="p-0" style={{ backgroundColor: "#eee8f8" }}>
+          <td colSpan={11} className="p-0" style={{ backgroundColor: "#eee8f8" }}>
             {fullRun ? (
               <RunDetailsPanel run={fullRun} />
             ) : (
@@ -205,14 +219,11 @@ export function SiteDetailPage() {
                     <GitCompare className="w-4 h-4" />
                     Comparar
                   </Link>
-                  <button
-                    onClick={() => runMutation.mutate(site.id)}
-                    disabled={runMutation.isPending || !!isRunning}
-                    className="ios-btn-primary"
-                  >
-                    <Play className="w-4 h-4" />
-                    {isRunning ? "Rodando..." : "Testar agora"}
-                  </button>
+                  <RunSiteButton
+                    siteId={site.id}
+                    disabled={runMutation.isPending}
+                    isRunning={!!isRunning}
+                  />
             </div>
       </div>
 
@@ -245,6 +256,7 @@ export function SiteDetailPage() {
                     <tr className="border-b border-white/50">
                       <th className="w-8"></th>
                       <th className="text-left py-3 px-3">Data</th>
+                      <th className="text-center py-3 px-3">Device</th>
                       <th className="text-left py-3 px-3">Status</th>
                       <th className="text-center py-3 px-3">Perf</th>
                       <th className="text-center py-3 px-3">Acess</th>

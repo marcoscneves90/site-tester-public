@@ -215,7 +215,7 @@ function SiteRow({ site, latest }: { site: Site; latest: Run | undefined }) {
       <td className="py-3.5 px-4 text-right">
         <div className="flex items-center justify-end gap-1.5">
           <button
-            onClick={() => runMutation.mutate(site.id)}
+            onClick={() => runMutation.mutate({ id: site.id, device: "desktop" })}
             disabled={runMutation.isPending || !!isRunning}
             className="ios-btn-primary !px-3 !py-1.5 !text-xs"
             title="Testar agora"

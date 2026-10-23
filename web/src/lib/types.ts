@@ -12,6 +12,7 @@ export interface Run {
   status: "queued" | "running" | "done" | "failed";
   started_at: string | null;
   finished_at: string | null;
+  device: "desktop" | "mobile";
   error: string | null;
   performance: number | null;
   accessibility: number | null;

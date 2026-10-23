@@ -60,29 +60,51 @@ export default async function sitesRoutes(app: FastifyInstance) {
     return reply.code(204).send();
   });
 
-  app.post<{ Params: { id: string } }>("/api/sites/:id/run", async (req, reply) => {
-    const siteId = Number(req.params.id);
-    if (!Number.isFinite(siteId)) return reply.code(400).send({ error: "id inválido" });
+  app.post<{ Params: { id: string }; Body: { device?: string } }>(
+    "/api/sites/:id/run",
+    async (req, reply) => {
+      const siteId = Number(req.params.id);
+      if (!Number.isFinite(siteId)) return reply.code(400).send({ error: "id inválido" });
 
-    const site = await queryOne<{ id: number; url: string }>(
-      `SELECT id, url FROM sites WHERE id = $1`,
-      [siteId]
-    );
-    if (!site) return reply.code(404).send({ error: "site não encontrado" });
+      const device = req.body?.device ?? "desktop";
+      if (!["desktop", "mobile", "ambos"].includes(device)) {
+        return reply.code(400).send({ error: "device inválido (use 'desktop', 'mobile' ou 'ambos')" });
+      }
 
-    const run = await queryOne<{ id: number }>(
-      `INSERT INTO runs (site_id, status) VALUES ($1, 'queued') RETURNING id`,
-      [siteId]
-    );
+      const site = await queryOne<{ id: number; url: string }>(
+        `SELECT id, url FROM sites WHERE id = $1`,
+        [siteId]
+      );
+      if (!site) return reply.code(404).send({ error: "site não encontrado" });
 
-    await lighthouseQueue.add("run", {
-      runId: run!.id,
-      siteId: site.id,
-      url: site.url,
-    });
+      // Cria run(s)
+      const devices: Array<"desktop" | "mobile"> =
+        device === "ambos" ? ["desktop", "mobile"] : [device as "desktop" | "mobile"];
 
-    return reply.code(202).send({ runId: run!.id, status: "queued" });
-  });
+      const runIds: number[] = [];
+      for (const d of devices) {
+        const run = await queryOne<{ id: number }>(
+          `INSERT INTO runs (site_id, status, device) VALUES ($1, 'queued', $2) RETURNING id`,
+          [siteId, d]
+        );
+        runIds.push(run!.id);
+
+        // Enfileira o job
+        await lighthouseQueue.add("run", {
+          runId: run!.id,
+          siteId: site.id,
+          url: site.url,
+          device: d,
+        });
+      }
+
+      return reply.code(202).send({
+        runIds,
+        devices: devices,
+        status: "queued",
+      });
+    }
+  );
 
   app.get<{ Params: { id: string }; Querystring: { limit?: string } }>(
     "/api/sites/:id/runs",
@@ -91,7 +113,7 @@ export default async function sitesRoutes(app: FastifyInstance) {
       const limit = Math.min(Number(req.query.limit ?? 50), 200);
 
       return query(
-        `SELECT id, status, started_at, finished_at, error,
+        `SELECT id, site_id, status, device, started_at, finished_at, error,
                 performance, accessibility, best_practices, seo,
                 seo_score, seo_subscores,
                 lcp_ms, fcp_ms, cls, tbt_ms, ttfb_ms, speed_index_ms

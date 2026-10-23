@@ -87,7 +87,7 @@ function valueForSort(
     case "accessibility":
       return latest.accessibility;
     case "seo":
-      return latest.seo;
+      return getAverageSeo(latest);   // ← USA A MÉDIA
     case "lcp":
       return latest.lcp_ms;
   }
@@ -161,6 +161,14 @@ function SortableTh({
   );
 }
 
+function getAverageSeo(latest: Run | undefined): number | null {
+  if (!latest) return null;
+  if (latest.seo != null && latest.seo_score != null) {
+    return Math.round((latest.seo + latest.seo_score) / 2);
+  }
+  return latest.seo ?? latest.seo_score ?? null;
+}
+
 // ============================================================
 // Linha da tabela
 // ============================================================
@@ -197,15 +205,8 @@ function SiteRow({ site, latest }: { site: Site; latest: Run | undefined }) {
         <ScoreBadge score={latest?.accessibility} size="sm" />
       </td>
      <td className="py-3.5 px-4 text-center">
-                <ScoreBadge
-                  score={
-                    latest?.seo != null && latest?.seo_score != null
-                      ? Math.round((latest.seo + latest.seo_score) / 2)
-                      : latest?.seo ?? latest?.seo_score
-                  }
-                  size="sm"
-                />
-              </td>
+       <ScoreBadge score={getAverageSeo(latest)} size="sm" />
+     </td>
 
       <td className="py-3.5 px-4 text-center text-sm text-slate-600 tabular-nums">
         {latest?.lcp_ms != null ? `${latest.lcp_ms} ms` : "—"}

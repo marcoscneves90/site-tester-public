@@ -142,8 +142,8 @@ function SortableTh({
         onClick={() => onSort(sortKey)}
         className={`inline-flex items-center gap-1 text-xs font-semibold uppercase tracking-wider transition ${
           isActive
-            ? "text-violet-600"
-            : "text-slate-500 hover:text-slate-700"
+            ? "text-violet-600 dark:text-violet-400"
+            : "text-slate-500 dark:text-stone-400 hover:text-slate-700 dark:hover:text-stone-200"
         }`}
       >
         {label}
@@ -180,18 +180,18 @@ function SiteRow({ site, latest }: { site: Site; latest: Run | undefined }) {
     latest && (latest.status === "queued" || latest.status === "running");
 
   return (
-    <tr className="border-b border-white/40 hover:bg-white/40 transition">
+    <tr className="border-b border-white/40 dark:border-stone-800/50 hover:bg-white/40 dark:hover:bg-stone-800/30 transition">
       <td className="py-3.5 px-4">
         <div className="flex items-center gap-3">
           <SiteAvatar siteId={site.id} name={site.name || site.url} size="md" />
           <div className="min-w-0">
             <Link
               to={`/sites/${site.id}`}
-              className="font-semibold text-slate-900 hover:text-violet-600"
+              className="font-semibold text-slate-900 dark:text-stone-100 hover:text-violet-600 dark:hover:text-violet-400"
             >
               {site.name || site.url}
             </Link>
-            <div className="text-xs text-slate-500 truncate max-w-md mt-0.5">
+            <div className="text-xs text-slate-500 dark:text-stone-400 truncate max-w-md mt-0.5">
               {site.url}
             </div>
           </div>
@@ -207,8 +207,7 @@ function SiteRow({ site, latest }: { site: Site; latest: Run | undefined }) {
      <td className="py-3.5 px-4 text-center">
        <ScoreBadge score={getAverageSeo(latest)} size="sm" />
      </td>
-
-      <td className="py-3.5 px-4 text-center text-sm text-slate-600 tabular-nums">
+     <td className="py-3.5 px-4 text-center text-sm text-slate-600 dark:text-stone-300 tabular-nums">
         {latest?.lcp_ms != null ? `${latest.lcp_ms} ms` : "—"}
       </td>
 
@@ -226,7 +225,7 @@ function SiteRow({ site, latest }: { site: Site; latest: Run | undefined }) {
 
           <Link
             to={`/sites/${site.id}`}
-            className="p-2 rounded-lg text-slate-500 hover:bg-white/80 transition"
+            className="p-2 rounded-lg text-slate-500 dark:text-stone-400 hover:bg-white/80 dark:hover:bg-stone-800/60 transition"
             title="Ver detalhes"
           >
             <ExternalLink className="w-4 h-4" />
@@ -238,7 +237,7 @@ function SiteRow({ site, latest }: { site: Site; latest: Run | undefined }) {
                 deleteMutation.mutate(site.id);
               }
             }}
-            className="p-2 rounded-lg text-slate-500 hover:bg-red-50 hover:text-red-600 transition"
+            className="p-2 rounded-lg text-slate-500 dark:text-stone-400 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-600 dark:hover:text-red-400 transition"
             title="Remover"
           >
             <Trash2 className="w-4 h-4" />
@@ -310,10 +309,10 @@ export function SitesListPage() {
     <div className="space-y-6">
       {/* Título */}
       <div>
-        <h1 className="text-3xl font-bold text-slate-900 tracking-tight">
+        <h1 className="text-3xl font-bold text-slate-900 dark:text-stone-100 tracking-tight">
           {greet}
         </h1>
-        <p className="text-sm text-slate-500 mt-1">
+        <p className="text-sm text-slate-500 dark:text-stone-400 mt-1">
           Aqui está o resumo dos seus sites monitorados
         </p>
       </div>
@@ -371,8 +370,8 @@ export function SitesListPage() {
 
       {/* Lista de sites */}
       <div className="glass-card overflow-hidden">
-        <div className="px-5 py-4 border-b border-white/50 flex items-center justify-between">
-          <h2 className="text-base font-semibold text-slate-800">
+        <div className="px-5 py-4 border-b border-white/50 dark:border-stone-800/50">
+          <h2 className="text-base font-semibold text-slate-800 dark:text-stone-200">
             Sites monitorados
           </h2>
           <span className="text-xs text-slate-400">

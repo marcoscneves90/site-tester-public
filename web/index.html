@@ -80,6 +80,20 @@
         }
       }
     </script>
+    <!-- Dark mode — aplica antes do React pra evitar flash branco -->
+    <script>
+      (function () {
+        try {
+          // Padrão: light. Só ativa dark se o usuário escolheu explicitamente.
+          const stored = localStorage.getItem("theme");
+          if (stored === "dark") {
+            document.documentElement.classList.add("dark");
+          }
+        } catch (e) {
+          /* ignora */
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

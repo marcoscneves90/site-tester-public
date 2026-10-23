@@ -43,12 +43,16 @@ function Card({
         </div>
       </div>
       <div>
-        <div className="text-[28px] font-bold text-slate-900 leading-tight tabular-nums">
+        <div className="text-[28px] font-bold text-slate-900 dark:text-stone-100 leading-tight tabular-nums">
           {value}
         </div>
-        <div className="text-xs font-medium text-slate-500 mt-1">{label}</div>
+        <div className="text-xs font-medium text-slate-500 dark:text-stone-400 mt-1">
+          {label}
+        </div>
         {hint && (
-          <div className="text-[11px] text-slate-400 mt-0.5">{hint}</div>
+          <div className="text-[11px] text-slate-400 dark:text-stone-500 mt-0.5">
+            {hint}
+          </div>
         )}
       </div>
     </div>

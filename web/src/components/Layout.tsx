@@ -1,5 +1,6 @@
 import { Link, Outlet, useLocation } from "react-router-dom";
 import { Gauge, Settings } from "lucide-react";
+import { ThemeToggle } from "./ThemeToggle";
 
 export function Layout() {
   const location = useLocation();
@@ -10,15 +11,19 @@ export function Layout() {
       <header className="glass-header sticky top-0 z-20">
         <div className="max-w-7xl mx-auto px-6 py-3.5 flex items-center gap-4">
           <Link to="/" className="flex items-center gap-2.5 group">
-            <div className="w-9 h-9 rounded-xl flex items-center justify-center"
-                 style={{ background: "linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%)" }}>
+            <div
+              className="w-9 h-9 rounded-xl flex items-center justify-center"
+              style={{
+                background: "linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%)",
+              }}
+            >
               <Gauge className="w-5 h-5 text-white" />
             </div>
             <div className="leading-tight">
-              <div className="text-[15px] font-bold text-slate-900">
+              <div className="text-[15px] font-bold text-slate-900 dark:text-stone-100">
                 Site Tester
               </div>
-              <div className="text-[10px] text-slate-500 font-medium uppercase tracking-wider">
+              <div className="text-[10px] text-slate-500 dark:text-stone-400 font-medium uppercase tracking-wider">
                 homelab · lighthouse
               </div>
             </div>
@@ -29,17 +34,18 @@ export function Layout() {
               to="/"
               className={`text-sm px-3.5 py-1.5 rounded-lg font-medium transition ${
                 isHome
-                  ? "bg-white/80 text-slate-900 shadow-sm"
-                  : "text-slate-600 hover:bg-white/50"
+                  ? "bg-white/80 dark:bg-stone-800/80 text-slate-900 dark:text-stone-100 shadow-sm"
+                  : "text-slate-600 dark:text-stone-300 hover:bg-white/50 dark:hover:bg-stone-800/50"
               }`}
             >
               Dashboard
             </Link>
           </nav>
 
-          <div className="ml-auto flex items-center gap-2">
+          <div className="ml-auto flex items-center gap-1">
+            <ThemeToggle />
             <button
-              className="p-2 rounded-lg text-slate-500 hover:bg-white/60 transition"
+              className="p-2 rounded-lg text-slate-500 dark:text-stone-400 hover:bg-white/60 dark:hover:bg-stone-800/60 transition"
               title="Configurações (em breve)"
               disabled
             >

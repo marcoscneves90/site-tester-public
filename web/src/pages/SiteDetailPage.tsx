@@ -73,7 +73,7 @@ function RunRow({
     <>
       <tr
         onClick={onToggle}
-        className="border-b border-white/40 hover:bg-white/40 cursor-pointer transition"
+        className="border-b border-white/40 dark:border-stone-800/50 hover:bg-white/40 dark:hover:bg-stone-800/30 cursor-pointer transition"
       >
         <td className="py-3 px-3 w-8">
           {isExpanded ? (
@@ -82,7 +82,7 @@ function RunRow({
             <ChevronRight className="w-4 h-4 text-slate-400" />
           )}
         </td>
-        <td className="py-3 px-3 text-sm text-slate-700 whitespace-nowrap">
+        <td className="py-3 px-3 text-sm text-slate-700 dark:text-stone-300 whitespace-nowrap">
           {fmtDate(run.started_at)}
         </td>
         <td className="py-3 px-3 text-center">
@@ -99,7 +99,7 @@ function RunRow({
         <td className="py-3 px-3">
           <div className="flex items-center gap-1.5">
             <StatusIcon status={run.status} />
-            <span className="text-xs text-slate-600 capitalize">
+            <span className="text-xs text-slate-600 dark:text-stone-400 capitalize">
               {run.status}
             </span>
           </div>
@@ -116,10 +116,10 @@ function RunRow({
         <td className="py-3 px-3 text-center">
           <ScoreBadge score={run.seo} size="sm" />
         </td>
-        <td className="py-3 px-3 text-sm text-slate-600 text-right tabular-nums">
+        <td className="py-3 px-3 text-sm text-slate-600 dark:text-stone-300 text-right tabular-nums">
           {run.lcp_ms != null ? `${run.lcp_ms} ms` : "—"}
         </td>
-        <td className="py-3 px-3 text-sm text-slate-500 text-right tabular-nums">
+        <td className="py-3 px-3 text-sm text-slate-500 dark:text-stone-400 text-right tabular-nums">
           {fmtDuration(run)}
         </td>
         <td className="py-3 px-2 w-10">
@@ -130,7 +130,7 @@ function RunRow({
                 onDelete();
               }
             }}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50/70 transition"
+            className="p-1.5 rounded-lg text-slate-400 dark:text-stone-500 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50/70 dark:hover:bg-red-900/20 transition"
             title="Remover esta execução"
           >
             <Trash2 className="w-3.5 h-3.5" />
@@ -186,7 +186,7 @@ export function SiteDetailPage() {
     <div>
       <Link
         to="/"
-        className="inline-flex items-center gap-1.5 text-sm font-medium text-slate-500 hover:text-slate-900 mb-5 transition"
+        className="inline-flex items-center gap-1.5 text-sm font-medium text-slate-500 dark:text-stone-400 hover:text-slate-900 dark:hover:text-stone-100 mb-5 transition"
       >
         <ArrowLeft className="w-4 h-4" />
         Voltar ao dashboard
@@ -197,14 +197,14 @@ export function SiteDetailPage() {
         <div className="flex items-center gap-4 min-w-0">
           <SiteAvatar siteId={site.id} name={site.name || site.url} size="lg" />
           <div className="min-w-0">
-            <h1 className="text-2xl font-bold text-slate-900 truncate tracking-tight">
+            <h1 className="text-2xl font-bold text-slate-900 dark:text-stone-100 truncate tracking-tight">
               {site.name || site.url}
             </h1>
             <a
               href={site.url}
               target="_blank"
               rel="noreferrer"
-              className="text-sm text-violet-600 hover:underline break-all"
+              className="text-sm text-violet-600 dark:text-violet-400 hover:underline break-all"
             >
               {site.url}
             </a>
@@ -233,16 +233,16 @@ export function SiteDetailPage() {
         <div className="lg:col-span-2">
           <div className="glass-card overflow-hidden">
             <div className="px-5 py-4 border-b border-white/50 flex items-center justify-between">
-              <h2 className="text-base font-bold text-slate-800">
+              <h2 className="text-base font-bold text-slate-800 dark:text-stone-200">
                 Histórico de execuções
-                <span className="ml-2 text-xs text-slate-400 font-normal">
+                <span className="ml-2 text-xs text-slate-400 dark:text-stone-500 font-normal">
                   ({runs.length})
                 </span>
               </h2>
             </div>
 
             {runsQuery.isLoading ? (
-              <div className="p-8 text-center text-slate-500 text-sm">
+              <div className="p-8 text-center text-slate-500 dark:text-stone-400 text-sm">
                 Carregando...
               </div>
             ) : runs.length === 0 ? (
@@ -253,7 +253,7 @@ export function SiteDetailPage() {
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                    <tr className="border-b border-white/50">
+                    <tr className="border-b border-white/50 dark:border-stone-800/50">
                       <th className="w-8"></th>
                       <th className="text-left py-3 px-3">Data</th>
                       <th className="text-center py-3 px-3">Device</th>

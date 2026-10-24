@@ -374,7 +374,7 @@ export function SitesListPage() {
           <h2 className="text-base font-semibold text-slate-800 dark:text-stone-200">
             Sites monitorados
           </h2>
-          <span className="text-xs text-slate-400">
+            <span className="text-xs text-slate-400 dark:text-stone-500">
             clique nos cabeçalhos para ordenar
           </span>
         </div>

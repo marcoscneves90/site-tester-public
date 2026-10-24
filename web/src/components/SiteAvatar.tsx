@@ -59,7 +59,7 @@ export function SiteAvatar({ siteId, name, size = "md" }: Props) {
 
   return (
     <div
-      className={`${box} flex items-center justify-center flex-shrink-0 overflow-hidden bg-white/60 dark:bg-stone-800/60 border border-white/80 dark:border-stone-700`}
+      className={`${box} flex items-center justify-center flex-shrink-0 overflow-hidden bg-white/60 dark:bg-stone-800/60 border border-white/80 dark:border-stone-700 dark:bg-stone-800/60`}
     >
       <img
         src={`/api/favicon/${siteId}`}

@@ -11,7 +11,6 @@ import {
   Link2,
   Code2,
   Globe,
-  Eye,
   Bot,
 } from "lucide-react";
 import { useRunSeoTechnical } from "../lib/hooks";
@@ -31,17 +30,11 @@ function StatusCard({
 }: {
   icon: React.ReactNode;
   label: string;
-  score: number; // 0-100
+  score: number;
   detail: string;
 }) {
   const color =
     score >= 90 ? "#10b981" : score >= 50 ? "#f59e0b" : "#ef4444";
-  const bg =
-    score >= 90
-      ? "rgba(16, 185, 129, 0.10)"
-      : score >= 50
-      ? "rgba(245, 158, 11, 0.10)"
-      : "rgba(239, 68, 68, 0.10)";
 
   return (
     <div
@@ -139,9 +132,7 @@ function JsonLdCard({ block }: { block: JsonLdBlock }) {
           Bloco #{block.index + 1}
         </span>
         <span className="text-xs text-slate-500">
-          {block.types.length > 0
-            ? block.types.join(", ")
-            : "JSON inválido"}
+          {block.types.length > 0 ? block.types.join(", ") : "JSON inválido"}
         </span>
         <span className="ml-auto text-slate-400">
           {expanded ? (
@@ -166,7 +157,7 @@ export function SeoTechnicalPanel({ runId }: Props) {
 
   if (isLoading) {
     return (
-      <div className="p-8 text-center text-slate-500 text-sm flex items-center justify-center gap-2">
+      <div className="p-8 text-center text-slate-500 dark:text-stone-400 text-sm flex items-center justify-center gap-2">
         <Loader2 className="w-4 h-4 animate-spin" />
         Analisando SEO técnico...
       </div>
@@ -175,7 +166,7 @@ export function SeoTechnicalPanel({ runId }: Props) {
 
   if (error || !data) {
     return (
-      <div className="p-8 text-center text-slate-500 text-sm">
+      <div className="p-8 text-center text-slate-500 dark:text-stone-400 text-sm">
         Não foi possível analisar o SEO técnico desta execução.
       </div>
     );
@@ -191,11 +182,7 @@ export function SeoTechnicalPanel({ runId }: Props) {
           icon={<Share2 className="w-4 h-4" />}
           label="Open Graph"
           score={summary.openGraphScore}
-          detail={
-            summary.hasOgImage
-              ? "Imagem presente"
-              : "Sem og:image"
-          }
+          detail={summary.hasOgImage ? "Imagem presente" : "Sem og:image"}
         />
         <StatusCard
           icon={<MessageCircle className="w-4 h-4" />}
@@ -213,9 +200,7 @@ export function SeoTechnicalPanel({ runId }: Props) {
           score={
             summary.jsonLdCount === 0
               ? 0
-              : Math.round(
-                  (summary.jsonLdValid / summary.jsonLdCount) * 100
-                )
+              : Math.round((summary.jsonLdValid / summary.jsonLdCount) * 100)
           }
           detail={
             summary.jsonLdCount === 0
@@ -227,7 +212,9 @@ export function SeoTechnicalPanel({ runId }: Props) {
           icon={<Bot className="w-4 h-4" />}
           label="Indexável"
           score={summary.indexable ? 100 : 0}
-          detail={summary.indexable ? "Google pode indexar" : "Bloqueada por robots"}
+          detail={
+            summary.indexable ? "Google pode indexar" : "Bloqueada por robots"
+          }
         />
       </div>
 
@@ -241,10 +228,7 @@ export function SeoTechnicalPanel({ runId }: Props) {
       />
 
       {/* Twitter Cards */}
-      <MetaTagList
-        title="Twitter Cards"
-        tags={data.twitterCards}
-      />
+      <MetaTagList title="Twitter Cards" tags={data.twitterCards} />
 
       {/* Structured Data */}
       <div>
@@ -256,7 +240,9 @@ export function SeoTechnicalPanel({ runId }: Props) {
           <div className="flex items-start gap-2.5 text-sm bg-amber-50/80 border border-amber-200 rounded-xl p-3">
             <AlertTriangle className="w-4 h-4 text-amber-600 mt-0.5 flex-shrink-0" />
             <div className="text-slate-700">
-              <strong className="font-semibold">Nenhum dado estruturado encontrado.</strong>{" "}
+              <strong className="font-semibold">
+                Nenhum dado estruturado encontrado.
+              </strong>{" "}
               Adicionar JSON-LD (Organization, LocalBusiness, Product, FAQ...)
               permite que o Google exiba rich snippets com mais informações nos
               resultados de busca.

@@ -175,3 +175,11 @@ export function useRunInfra(runId: number | null) {
     enabled: runId != null,
   });
 }
+
+export function useRunSeoLocal(runId: number | null) {
+  return useQuery({
+    queryKey: ["run-seo-local", runId],
+    queryFn: () => api.getRunSeoLocal(runId!),
+    enabled: runId != null,
+  });
+}

@@ -408,3 +408,40 @@ export interface InfraData {
   };
   finalUrl: string;
 }
+
+export interface SeoLocalCheck {
+  id: string;
+  label: string;
+  ok: boolean;
+  weight: number;
+  detail: string;
+}
+
+export interface SeoLocalData {
+  score: number;
+  checks: SeoLocalCheck[];
+  nap: {
+    name: string | null;
+    address: string | null;
+    phone: string | null;
+    phoneIsLink: boolean;
+  };
+  schemaLocalBusiness: {
+    present: boolean;
+    type: string | null;
+    hasAddress: boolean;
+    hasPhone: boolean;
+    hasOpeningHours: boolean;
+    hasRating: boolean;
+  };
+  mapEmbed: {
+    present: boolean;
+    provider: string | null;
+  };
+  socialLinks: {
+    facebook: boolean;
+    instagram: boolean;
+    googleMaps: boolean;
+    whatsapp: boolean;
+  };
+}

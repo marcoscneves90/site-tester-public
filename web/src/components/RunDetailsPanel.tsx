@@ -10,6 +10,9 @@ import {
   Search,
   Files,
   HardDrive,
+  Medal,
+  Code2,
+  MapPin,
 } from "lucide-react";
 import { ResourcesPanel } from "./ResourcesPanel";
 import type { RunWithRaw } from "../lib/types";
@@ -23,6 +26,7 @@ import { SeoTechnicalPanel } from "./SeoTechnicalPanel";
 import { WaterfallChart } from "./WaterfallChart";
 import { PagesPanel } from "./PagesPanel";
 import { InfraPanel } from "./InfraPanel";
+import { SeoLocalPanel } from "./SeoLocalPanel";
 import {
   buildAuditCategoryMap,
   CATEGORY_COLORS,
@@ -361,39 +365,56 @@ export function RunDetailsPanel({ run, onDelete }: Props) {
 }
 
 function SeoTab({ runId }: { runId: number }) {
-  const [seoSubTab, setSeoSubTab] = useState<"overview" | "technical">("overview");
+  const [seoSubTab, setSeoSubTab] = useState<"overview" | "technical" | "local">(
+    "overview"
+  );
 
   return (
     <div className="space-y-5">
       {/* Sub-abas */}
-      <div className="flex items-center gap-1 border-b border-white/50 pb-2">
+      <div className="flex items-center gap-1 border-b border-white/50 dark:border-stone-800/50 pb-2">
         <button
           onClick={() => setSeoSubTab("overview")}
           className={`inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg transition ${
             seoSubTab === "overview"
-              ? "bg-violet-100 text-violet-700"
-              : "text-slate-500 hover:bg-white/60"
+              ? "bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-300"
+              : "text-slate-500 dark:text-stone-400 hover:bg-white/60 dark:hover:bg-stone-800/60"
           }`}
         >
+          <Medal className="w-3.5 h-3.5" />
           Resumo
         </button>
         <button
           onClick={() => setSeoSubTab("technical")}
           className={`inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg transition ${
             seoSubTab === "technical"
-              ? "bg-violet-100 text-violet-700"
-              : "text-slate-500 hover:bg-white/60"
+              ? "bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-300"
+              : "text-slate-500 dark:text-stone-400 hover:bg-white/60 dark:hover:bg-stone-800/60"
           }`}
         >
+          <Code2 className="w-3.5 h-3.5" />
           Técnico
+        </button>
+        <button
+          onClick={() => setSeoSubTab("local")}
+          className={`inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg transition ${
+            seoSubTab === "local"
+              ? "bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-300"
+              : "text-slate-500 dark:text-stone-400 hover:bg-white/60 dark:hover:bg-stone-800/60"
+          }`}
+        >
+          <MapPin className="w-3.5 h-3.5" />
+          Local
         </button>
       </div>
 
       {/* Conteúdo */}
       {seoSubTab === "overview" ? (
         <SeoOverviewTab runId={runId} />
-      ) : (
+      ) : seoSubTab === "technical" ? (
         <SeoTechnicalPanel runId={runId} />
+      ) : (
+        <SeoLocalPanel runId={runId} />
       )}
     </div>
   );

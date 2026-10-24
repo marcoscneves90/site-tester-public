@@ -15,6 +15,7 @@ import type {
   SiteSeoScore,
   PageAudit,
   InfraData,
+  SeoLocalData,
 } from "./types";
 
 const BASE = "/api";
@@ -60,6 +61,7 @@ export const api = {
   getRunWaterfall: (id: number) => request<WaterfallData>(`/runs/${id}/waterfall`),
   getRunSeoScore: (id: number) => request<SeoScore>(`/runs/${id}/seo-score`), 
   getRunSeoTechnical: (id: number) => request<SeoTechnicalData>(`/runs/${id}/seo-technical`),
+  getRunSeoLocal: (id: number) => request<SeoLocalData>(`/runs/${id}/seo-local`),
   getRunInfra: (id: number) => request<InfraData>(`/runs/${id}/infra`),
   getAllSeoScores: () => request<SiteSeoScore[]>("/sites/seo-scores"),
   getOverview: () => request<Overview>("/stats/overview"),

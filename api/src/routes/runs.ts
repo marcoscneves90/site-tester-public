@@ -2,6 +2,7 @@ import type { FastifyInstance } from "fastify";
 import { queryOne, query } from "../db/client.js";
 import { calculateSeoScore } from "../lighthouse/seo-score.js";
 import { analyzeImages, analyzeFonts } from "../lighthouse/infra-parser.js";
+import { analyzeSeoLocal } from "../lighthouse/seo-local.js";
 
 const GENERATOR_REGEX = new RegExp(
   '<meta[^>]*name="generator"[^>]*content="([^"]+)"',
@@ -600,6 +601,49 @@ export default async function runsRoutes(app: FastifyInstance) {
       jsonLd,
       serpPreview,
     };
+  });
+
+  // GET /api/runs/:id/seo-local
+  // Análise de SEO local: NAP, Schema LocalBusiness, Map, Horários
+  app.get<{ Params: { id: string } }>("/api/runs/:id/seo-local", async (req, reply) => {
+    const id = Number(req.params.id);
+    if (!Number.isFinite(id)) return reply.code(400).send({ error: "id inválido" });
+
+    const run = await queryOne<{ site_id: number }>(
+      `SELECT site_id FROM runs WHERE id = $1`,
+      [id]
+    );
+    if (!run) return reply.code(404).send({ error: "run não encontrada" });
+
+    const site = await queryOne<{ url: string }>(
+      `SELECT url FROM sites WHERE id = $1`,
+      [run.site_id]
+    );
+    if (!site) return reply.code(404).send({ error: "site não encontrado" });
+
+    // Fetch do HTML
+    let html = "";
+    try {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 10_000);
+      const resp = await fetch(site.url, {
+        signal: controller.signal,
+        headers: {
+          "User-Agent": "Mozilla/5.0 (compatible; SiteTester/1.0; +homelab)",
+        },
+      });
+      clearTimeout(timer);
+      if (resp.ok) {
+        html = await resp.text();
+      }
+    } catch (err) {
+      return reply.code(502).send({
+        error: "falha ao buscar HTML do site",
+        detail: (err as Error).message,
+      });
+    }
+
+    return analyzeSeoLocal(html);
   });
 
   // GET /api/runs/:id/screenshots
